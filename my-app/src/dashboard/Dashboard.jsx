@@ -17,8 +17,13 @@ const SAMPLE_RESPONSE = {
     moving_time: 392026,
   },
 };
+const HEADER_ROW = ["", "Ride Totals", "Run Totals"];
 
 function buildDataArray(response) {
+  const { all_run_totals, all_ride_totals } = response;
+  if (!all_run_totals || !all_run_totals) {
+    return [HEADER_ROW];
+  }
   const keys = [
     "count",
     "distance",
@@ -26,39 +31,57 @@ function buildDataArray(response) {
     "elevation_gain",
     "moving_time",
   ];
-  const { all_run_totals, all_ride_totals } = response;
   const dataRows = keys.map((key) => [
     key,
     all_ride_totals[key],
     all_run_totals[key],
   ]);
-  return [["", "Ride Totals", "Run Totals"]].concat(dataRows);
+  return [HEADER_ROW].concat(dataRows);
 }
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chartDataRows: [],
+    };
+  }
+
+  componentDidMount() {
+    this.props.statistics.then((statistics) => {
+      this.setState({ chartDataRows: statistics });
+    });
+  }
+
+  renderChart() {
+    return (
+      <Chart
+        width={600}
+        height={300}
+        chartType="ColumnChart"
+        loader={<div>Loading Chart</div>}
+        data={buildDataArray(this.state.chartDataRows)}
+        options={{
+          title: "Lifetime Strava Activity Breakdown",
+          chartArea: { width: "50%" },
+          hAxis: {
+            title: "Statistics",
+            minValue: 0,
+          },
+          vAxis: {
+            title: "",
+          },
+        }}
+        legendToggle
+      />
+    );
+  }
+
   render() {
     return (
       <div className="display">
         <div style={{ display: "flex", maxWidth: 900 }}>
-          <Chart
-            width={600}
-            height={300}
-            chartType="ColumnChart"
-            loader={<div>Loading Chart</div>}
-            data={buildDataArray(SAMPLE_RESPONSE)}
-            options={{
-              title: "Lifetime Strava Activity Breakdown",
-              chartArea: { width: "50%" },
-              hAxis: {
-                title: "Statistics",
-                minValue: 0,
-              },
-              vAxis: {
-                title: "",
-              },
-            }}
-            legendToggle
-          />
+          {this.renderChart()}
         </div>
       </div>
     );

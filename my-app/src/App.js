@@ -3,10 +3,10 @@ import logo from "./logo.svg";
 import "./App.css";
 import Dashboard from "./dashboard/Dashboard";
 
-const TOKEN = "4e116640059b7a38675c4cef5eb52f6b118c117d";
+const TOKEN = "081b0537783749c26cfe775f746b7aaf3dd4ca63";
 
 function query(request) {
-  fetch(request, {
+  return fetch(request, {
     headers: {
       Authorization: `Bearer ${TOKEN}`,
     },
@@ -16,12 +16,13 @@ function query(request) {
     })
     .then(function (data) {
       console.log(data);
+      return data;
     });
 }
 
 function App() {
-  query("https://www.strava.com/api/v3/athlete");
-  query("https://www.strava.com/api/v3/athletes/36006028/stats");
+  const profile_url = query("https://www.strava.com/api/v3/athlete");
+  const statistics_url = query("https://www.strava.com/api/v3/athletes/36006028/stats");
 
   return (
     <div className="App">
@@ -30,7 +31,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <Dashboard />
+        <Dashboard statistics={statistics_url}/>
       </header>
     </div>
   );
