@@ -2,11 +2,12 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-function App() {
-  // curl -X GET \\nhttps://www.strava.com/api/v3/athlete \\n-H 'Authorization: Bearer 4e116640059b7a38675c4cef5eb52f6b118c117d'
-  fetch("https://www.strava.com/api/v3/athlete", {
+const TOKEN = "4e116640059b7a38675c4cef5eb52f6b118c117d";
+
+function query(request) {
+  fetch(request, {
     headers: {
-      Authorization: "Bearer 4e116640059b7a38675c4cef5eb52f6b118c117d",
+      Authorization: `Bearer ${TOKEN}`,
     },
   })
     .then(function (response) {
@@ -15,6 +16,11 @@ function App() {
     .then(function (data) {
       console.log(data);
     });
+}
+
+function App() {
+  query("https://www.strava.com/api/v3/athlete");
+  query("https://www.strava.com/api/v3/athletes/36006028/stats");
 
   return (
     <div className="App">
