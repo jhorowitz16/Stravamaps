@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import Dashboard from "./dashboard/Dashboard";
 
 const TOKEN = "4e116640059b7a38675c4cef5eb52f6b118c117d";
 
@@ -29,14 +30,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Dashboard />
       </header>
     </div>
   );
